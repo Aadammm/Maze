@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace Maze
 {
-    internal class Bod
+    struct Bod
     {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Hodnota { get; set; }
+        public Bod(int x, int y, int hodnota)
+        {
+            X = x;
+            Y = y;
+            Hodnota = hodnota;
+        }
     }
 }

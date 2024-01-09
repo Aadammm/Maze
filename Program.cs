@@ -30,12 +30,25 @@ namespace Maze
 
         static void Main(string[] args)
         {
+            bool cilovyBodNajdeny = false;
             // Každý bod má ve výchozím stavu maximální možnou hodnotu,
             // aby se pak dala jednodušeji porovnávat při hledání výsledné cesty
             for (int y = 0; y < body.GetLength(1); y++)
                 for (int x = 0; x < body.GetLength(0); x++)
                     body[x, y] = new Bod(x, y, int.MaxValue);
             body[pocatecniBod.X, pocatecniBod.Y] = pocatecniBod;
+            //bod
+            Bod aktualny = new Bod(pocatecniBod.X, pocatecniBod.Y, 0);
+            //fronta
+            Queue<Bod> franta = new Queue<Bod>();
+            franta.Enqueue(aktualny);
+            if (prostredi[aktualny.X + 1, aktualny.Y] == 0)
+            {
+
+            }
+
+
+
         }
     }
 }
