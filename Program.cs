@@ -36,17 +36,45 @@ namespace Maze
             for (int y = 0; y < body.GetLength(1); y++)
                 for (int x = 0; x < body.GetLength(0); x++)
                     body[x, y] = new Bod(x, y, int.MaxValue);
-            body[pocatecniBod.X, pocatecniBod.Y] = pocatecniBod;
-            //bod
-            Bod aktualny = new Bod(pocatecniBod.X, pocatecniBod.Y, 0);
-            //fronta
+
+            int aktualX=pocatecniBod.X;int aktualY = pocatecniBod.Y;
+            body[aktualX, aktualY] = pocatecniBod;
+
             Queue<Bod> franta = new Queue<Bod>();
-            franta.Enqueue(aktualny);
-            if (prostredi[aktualny.X + 1, aktualny.Y] == 0)
+            franta.Enqueue(pocatecniBod);
+            while (cilovyBodNajdeny)
             {
 
+            //pravo
+            if (prostredi[aktualX+1, aktualY] == 0)
+            {
+                    aktualX += 1;
+                body[aktualX , aktualY].Hodnota =+ 1;
             }
+            //vlavo
+            if (prostredi[aktualX - 1, aktualY] == 0)
+            {
+                    aktualX -= 1;
+                body[aktualX , aktualY].Hodnota = +1;
+            }
+            //hore
+            if (prostredi[aktualX , aktualY-1] == 0)
+            {
+                    aktualY -= 1;
+                body[aktualX , aktualY].Hodnota = +1;
+            }
+            //dole
+            if (prostredi[aktualX , aktualY+1] == 0)
+            {
+                    aktualX += 1;
+                body[aktualX, aktualY].Hodnota = +1;
+            }
+                franta.Enqueue(body[aktualX, aktualY]);
 
+                //finish
+                if (aktualX == cilovyBod.X && aktualY == cilovyBod.Y)
+                    cilovyBodNajdeny = true;
+            }
 
 
         }
