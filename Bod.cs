@@ -17,5 +17,6 @@ namespace Maze
             Y = y;
             Hodnota = hodnota;
         }
+
     }
 }
