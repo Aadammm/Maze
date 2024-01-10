@@ -38,92 +38,101 @@ namespace Maze
 
             int aktualX = pocatecniBod.X; int aktualY = pocatecniBod.Y;
             body[aktualX, aktualY] = pocatecniBod;
-
+            //fronta franta kde sa pridavaju bod 
             Queue<Bod> franta = new Queue<Bod>();
+            //pridanie prveho bodu 
             franta.Enqueue(pocatecniBod);
+            //pokym nedojde do cieloveho bodu bude postupne prechadzat policka vedla prveho bodu vo fronte
             while (aktualX != cilovyBod.X || aktualY != cilovyBod.Y)
             {
                 //hore
-                if (aktualY - 1>=0&&prostredi[aktualX, aktualY - 1] == 0 && body[aktualX, aktualY - 1].Hodnota == int.MaxValue)
+                if (aktualY - 1 >= 0 && prostredi[aktualX, aktualY - 1] == 0 && body[aktualX, aktualY - 1].Hodnota == int.MaxValue)
                 {
 
-                    body[aktualX, aktualY - 1].Hodnota = franta.Peek().Hodnota + 1;
-                    franta.Enqueue(body[aktualX, aktualY - 1]);
+                    body[aktualX, aktualY - 1].Hodnota = franta.Peek().Hodnota + 1;//zvysi hodnotu o 1
+                    franta.Enqueue(body[aktualX, aktualY - 1]);//pridava bod na konci fronty 
                 }
                 //vlavo
-                if (aktualX - 1>=0&&prostredi[aktualX - 1, aktualY] == 0 && body[aktualX - 1, aktualY].Hodnota == int.MaxValue)
+                if (aktualX - 1 >= 0 && prostredi[aktualX - 1, aktualY] == 0 && body[aktualX - 1, aktualY].Hodnota == int.MaxValue)
                 {
 
                     body[aktualX - 1, aktualY].Hodnota = franta.Peek().Hodnota + 1;
                     franta.Enqueue(body[aktualX - 1, aktualY]);
                 }
                 //dole
-                if (aktualY + 1<body.GetLength(1)&&prostredi[aktualX, aktualY + 1] == 0 && body[aktualX, aktualY + 1].Hodnota == int.MaxValue)
+                if (aktualY + 1 < body.GetLength(1) && prostredi[aktualX, aktualY + 1] == 0 && body[aktualX, aktualY + 1].Hodnota == int.MaxValue)
                 {
 
                     body[aktualX, aktualY + 1].Hodnota = franta.Peek().Hodnota + 1;
                     franta.Enqueue(body[aktualX, aktualY + 1]);
                 }
                 //pravo
-                if (aktualX + 1<body.GetLength(0)&&prostredi[aktualX + 1, aktualY] == 0 && body[aktualX + 1, aktualY].Hodnota == int.MaxValue)
+                if (aktualX + 1 < body.GetLength(0) && prostredi[aktualX + 1, aktualY] == 0 && body[aktualX + 1, aktualY].Hodnota == int.MaxValue)
                 {
 
                     body[aktualX + 1, aktualY].Hodnota = franta.Peek().Hodnota + 1;
                     franta.Enqueue(body[aktualX + 1, aktualY]);
                 }
-                franta.Dequeue();
+                franta.Dequeue();//odoberie prvy bod zo zaciatku fronty
                 aktualX = franta.Peek().X; aktualY = franta.Peek().Y;
 
             }
-           
-            //ulozit cestu do fronty
-            while (body[aktualX, aktualY].Hodnota != 0)
-            {
-                //hore
-                 if (body[aktualX, aktualY - 1].Hodnota < body[aktualX, aktualY].Hodnota)
-                {
-                    aktualY -= 1;
-                    franta.Enqueue(body[aktualX, aktualY]);
 
-                }
-                //v pravo
-               else  if (body[aktualX + 1, aktualY].Hodnota < body[aktualX, aktualY].Hodnota)
-                {
-                    aktualX += 1;
-                    franta.Enqueue(body[aktualX, aktualY]);
-
-                }
-                //vlavo
-                else if (body[aktualX - 1, aktualY].Hodnota < body[aktualX, aktualY].Hodnota)
-                {
-                    aktualX -= 1;
-                    franta.Enqueue(body[aktualX, aktualY]);
-
-                }
-                //dole
-                else if (body[aktualX, aktualY + 1].Hodnota < body[aktualX, aktualY].Hodnota)
-                {
-                    aktualY += 1;
-                    franta.Enqueue(body[aktualX, aktualY]);
-
-                }
-
-            }
+            //sme v cieli , musime vypisat cestu spat- pouzijeme zasobnik 
+            //mozeme pouzit aj frontu
             Stack<Bod> stack = new Stack<Bod>(franta);
-            foreach (var bod in stack)
+                do
+                {
+                    //hore
+                    if (body[aktualX, aktualY - 1].Hodnota < body[aktualX, aktualY].Hodnota)
+                    {
+                        aktualY -= 1;
+                        stack.Push(body[aktualX, aktualY]);
+                        // franta.Enqueue(body[aktualX, aktualY]);
+
+                    }
+                    //v pravo
+                    else if (body[aktualX + 1, aktualY].Hodnota < body[aktualX, aktualY].Hodnota)
+                    {
+                        aktualX += 1;
+                        stack.Push(body[aktualX, aktualY]);
+                        // franta.Enqueue(body[aktualX, aktualY]);
+
+                    }
+                    //vlavo
+                    else if (body[aktualX - 1, aktualY].Hodnota < body[aktualX, aktualY].Hodnota)
+                    {
+                        aktualX -= 1;
+                        stack.Push(body[aktualX, aktualY]);
+                        // franta.Enqueue(body[aktualX, aktualY]);
+
+                    }
+                    //dole
+                    else if (body[aktualX, aktualY + 1].Hodnota < body[aktualX, aktualY].Hodnota)
+                    {
+                        aktualY += 1;
+                        stack.Push(body[aktualX, aktualY]);
+                        // franta.Enqueue(body[aktualX, aktualY]);
+
+
+                    }
+                } while (body[aktualX, aktualY].Hodnota != 0);
+            //vypis cesty ciselne v bodoch x,y
+            foreach (Bod bod in stack)
             {
                 Console.Write("[{0};{1}] ", bod.X, bod.Y);
             }
-            //Console.WriteLine();
-            //Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            //vypis cesty graficky
             //for (var i = 0; i < prostredi.GetLength(0); i++)
             //{
             //    for (int ji = 0; ji < prostredi.GetLength(1); ji++)
             //    {
             //        if (body[ji, i].Hodnota < 50)
-            //            Console.Write($"{body[ji, i].Hodnota,4}");
+            //            Console.Write($"{body[ji, i].Hodnota,3}");
             //        else
-            //        Console.Write($"{"X",4}");
+            //            Console.Write($"{"███",3}");
             //    }
             //    Console.WriteLine();
             //}
