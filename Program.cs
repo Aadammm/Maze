@@ -130,13 +130,28 @@ namespace Maze
                 for (int ji = 0; ji < prostredi.GetLength(1); ji++)
                 {
                     if (body[ji, i].Hodnota < 50)
-                        Console.Write($"{body[ji, i].Hodnota,3}");
+                        //Console.Write($"{body[ji, i].Hodnota,3}");
+                        Console.Write(body[ji,i].Hodnota);
                     else
-                        Console.Write($"{"███",3}");
+                        //  Console.Write($"{"███",3}");
+                        Console.Write("██");
                 }
                 Console.WriteLine();
             }
-
+            Console.WriteLine();
+            string a = "████████████████████████████████████\t\t  \r\n██████.10.11.12.13.14.15████████████\t\t  \r\n███..8..9██████.14.15.16.17█████████\t\t  \r\n███..7█████████.15.16.17.18.19.20███\t\t  \r\n███..6..5..6██████.17.18.19.20.21███\t\t  \r\n██████..4..5██████.18.19.20███.22███\t\t  \r\n██████..3███..1..2█████████.24.23███\t\t  \r\n██████..2..1..0..1███.27.26.25.24███\t\t  \r\n██████..3..2..1..2███.28██████.25███\t\t  \r\n█████████████████████.29.30███.26███\t\t  \r\n████████████████████████.29.28.27███\t\t\r\n████████████████████████████████████\t\t";
+            Console.WriteLine(a);
+            string b = "";
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] == '.')
+                    b += '_';
+                else
+                    b += a[i];
+            }
+           
+            Console.WriteLine();
+            Console.WriteLine(b);
             Console.ReadLine();
 
 
