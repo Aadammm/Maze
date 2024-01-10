@@ -125,17 +125,17 @@ namespace Maze
             Console.WriteLine();
             Console.WriteLine();
             //vypis cesty graficky
-            //for (var i = 0; i < prostredi.GetLength(0); i++)
-            //{
-            //    for (int ji = 0; ji < prostredi.GetLength(1); ji++)
-            //    {
-            //        if (body[ji, i].Hodnota < 50)
-            //            Console.Write($"{body[ji, i].Hodnota,3}");
-            //        else
-            //            Console.Write($"{"███",3}");
-            //    }
-            //    Console.WriteLine();
-            //}
+            for (var i = 0; i < prostredi.GetLength(0); i++)
+            {
+                for (int ji = 0; ji < prostredi.GetLength(1); ji++)
+                {
+                    if (body[ji, i].Hodnota < 50)
+                        Console.Write($"{body[ji, i].Hodnota,3}");
+                    else
+                        Console.Write($"{"███",3}");
+                }
+                Console.WriteLine();
+            }
 
             Console.ReadLine();
 
