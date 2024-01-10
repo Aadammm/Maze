@@ -122,8 +122,6 @@ namespace Maze
             {
                 Console.Write("[{0};{1}] ", bod.X, bod.Y);
             }
-            Console.WriteLine();
-            Console.WriteLine();
             //vypis cesty graficky
             //for (var i = 0; i < prostredi.GetLength(0); i++)
             //{
