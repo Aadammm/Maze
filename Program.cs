@@ -130,9 +130,11 @@ namespace Maze
                 for (int ji = 0; ji < prostredi.GetLength(1); ji++)
                 {
                     if (body[ji, i].Hodnota < 50)
-                        Console.Write($"{body[ji, i].Hodnota,3}");
+                        //Console.Write($"{body[ji, i].Hodnota,3}");
+                        Console.Write(body[ji,i].Hodnota);
                     else
-                        Console.Write($"{"███",3}");
+                        //  Console.Write($"{"███",3}");
+                        Console.Write("██");
                 }
                 Console.WriteLine();
             }
