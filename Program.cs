@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maze
@@ -18,12 +19,12 @@ namespace Maze
             Maze maze = new Maze();
             int fieldWidthLength = maze.GetWidth();
             int fieldHeightLength = maze.GetHeight();
-            Point[,] fieldOfPoints = new Point[fieldWidthLength,fieldHeightLength];
+            Point[,] fieldOfPoints = new Point[fieldWidthLength, fieldHeightLength];
 
             Point Start = new Point(4, 7, 0);
             Point Finish = new Point(8, 9, int.MaxValue);
 
-            FillField(fieldWidthLength, fieldHeightLength,fieldOfPoints);
+            FillField(fieldWidthLength, fieldHeightLength, fieldOfPoints);
 
             int aktualX = Start.X; int aktualY = Start.Y;
             fieldOfPoints[aktualX, aktualY] = Start;
@@ -54,9 +55,9 @@ namespace Maze
                 }
                 Road.Dequeue();
                 aktualX = Road.Peek().X; aktualY = Road.Peek().Y;
-                DisplayRoad(fieldWidthLength, fieldHeightLength);
+                DisplayRoad(fieldWidthLength, fieldHeightLength, fieldOfPoints);
+                Thread.Sleep(100);
             }
-
 
             Stack<Point> stack = new Stack<Point>(Road);
             do
@@ -105,14 +106,15 @@ namespace Maze
             Console.WriteLine();
         }
 
-        private static void DisplayRoad(int width, int height)
+        private static void DisplayRoad(int width, int height, Point[,] field)
         {
+            Console.Clear();
             for (var i = 0; i < width; i++)
             {
                 for (int ji = 0; ji < height; ji++)
                 {
-                    if (Field[ji, i].Value < 50)
-                        Console.Write($"{Field[ji, i].Value,3}");
+                    if (field[ji, i].Value < 50)
+                        Console.Write($"{field[ji, i].Value,3}");
                     else
                         Console.Write($"{"███",3}");
                 }
