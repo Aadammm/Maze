@@ -24,7 +24,7 @@ namespace Maze
             Point Start = new Point(4, 7, 0);
             Point Finish = new Point(8, 9, int.MaxValue);
 
-            FillField(fieldWidthLength, fieldHeightLength, fieldOfPoints);
+            FillField();
 
             int aktualX = Start.X; int aktualY = Start.Y;
             fieldOfPoints[aktualX, aktualY] = Start;
@@ -55,7 +55,7 @@ namespace Maze
                 }
                 Road.Dequeue();
                 aktualX = Road.Peek().X; aktualY = Road.Peek().Y;
-                DisplayRoad(fieldWidthLength, fieldHeightLength, fieldOfPoints);
+                DisplayRoad();
                 Thread.Sleep(100);
             }
 
@@ -83,42 +83,43 @@ namespace Maze
                     stack.Push(fieldOfPoints[aktualX, aktualY]);
                 }
             } while (fieldOfPoints[aktualX, aktualY].Value != 0);
-            DisplayPointRoad(stack);
+            DisplayPointRoad();
 
             Console.ReadLine();
-        }
 
-        private static void FillField(int fieldWidthLength, int fieldHeightLength, Point[,] field)
-        {
 
-            for (int y = 0; y < fieldWidthLength; y++)
-                for (int x = 0; x < fieldHeightLength; x++)
-                    field[x, y] = new Point(x, y, int.MaxValue);
-        }
-
-        private static void DisplayPointRoad(Stack<Point> stack)
-        {
-            Console.WriteLine();
-            foreach (Point bod in stack)
+            void FillField()
             {
-                Console.Write($"[{bod.X};{bod.Y}] ");
+
+                for (int y = 0; y < fieldWidthLength; y++)
+                    for (int x = 0; x < fieldHeightLength; x++)
+                        fieldOfPoints[x, y] = new Point(x, y, int.MaxValue);
             }
-            Console.WriteLine();
-        }
 
-        private static void DisplayRoad(int width, int height, Point[,] field)
-        {
-            Console.Clear();
-            for (var i = 0; i < width; i++)
+            void DisplayPointRoad()
             {
-                for (int ji = 0; ji < height; ji++)
+                Console.WriteLine();
+                foreach (Point bod in stack)
                 {
-                    if (field[ji, i].Value < 50)
-                        Console.Write($"{field[ji, i].Value,3}");
-                    else
-                        Console.Write($"{"███",3}");
+                    Console.Write($"[{bod.X};{bod.Y}] ");
                 }
                 Console.WriteLine();
+            }
+
+            void DisplayRoad()
+            {
+                Console.Clear();
+                for (var i = 0; i < fieldWidthLength; i++)
+                {
+                    for (int ji = 0; ji < fieldHeightLength; ji++)
+                    {
+                        if (fieldOfPoints[ji, i].Value < 50)
+                            Console.Write($"{fieldOfPoints[ji, i].Value,3}");
+                        else
+                            Console.Write($"{"███",3}");
+                    }
+                    Console.WriteLine();
+                }
             }
         }
     }
