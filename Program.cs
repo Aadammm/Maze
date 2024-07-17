@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Maze
 {
-    internal class Program
+    public static class Program
     {
-        static int[,] prostredi = new int[12, 12]
+        static readonly int[,] Maze = new int[12, 12]
          {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
             { 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1 },
@@ -24,121 +24,110 @@ namespace Maze
             { 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
          };
-        static Bod[,] body = new Bod[prostredi.GetLength(0), prostredi.GetLength(1)];
-        static Bod pocatecniBod = new Bod(4, 7, 0);
-        static Bod cilovyBod = new Bod(8, 9, int.MaxValue);
+        static readonly Point[,] Field = new Point[Maze.GetLength(0), Maze.GetLength(1)];
+        static readonly Point Start = new Point(4, 7, 0);
+        static readonly Point Finish = new Point(8, 9, int.MaxValue);
 
 
         static void Main(string[] args)
         {
-            for (int y = 0; y < body.GetLength(1); y++)
-                for (int x = 0; x < body.GetLength(0); x++)
-                    body[x, y] = new Bod(x, y, int.MaxValue);
+            int fieldWidthLength = Maze.GetLength(0);
+            int fieldHeightLength = Maze.GetLength(1);
+            FillField(fieldWidthLength,fieldHeightLength);
 
-            int aktualX = pocatecniBod.X; int aktualY = pocatecniBod.Y;
-            body[aktualX, aktualY] = pocatecniBod;
-            //fronta franta kde sa pridavaju bod 
-            Queue<Bod> franta = new Queue<Bod>();
-            //pridanie prveho bodu 
-            franta.Enqueue(pocatecniBod);
-            //pokym nedojde do cieloveho bodu bude postupne prechadzat policka vedla prveho bodu vo fronte
-            while (aktualX != cilovyBod.X || aktualY != cilovyBod.Y)
-            {
-                Console.Clear();
-                //hore
-                if (aktualY - 1 >= 0 && prostredi[aktualX, aktualY - 1] == 0 && body[aktualX, aktualY - 1].Value == int.MaxValue)
-                {
-
-                    body[aktualX, aktualY - 1].Value = franta.Peek().Value + 1;//zvysi hodnotu o 1
-                    franta.Enqueue(body[aktualX, aktualY - 1]);//pridava bod na konci fronty 
-                }
-                //vlavo
-                if (aktualX - 1 >= 0 && prostredi[aktualX - 1, aktualY] == 0 && body[aktualX - 1, aktualY].Value == int.MaxValue)
-                {
-
-                    body[aktualX - 1, aktualY].Value = franta.Peek().Value + 1;
-                    franta.Enqueue(body[aktualX - 1, aktualY]);
-                }
-                //dole
-                if (aktualY + 1 < body.GetLength(1) && prostredi[aktualX, aktualY + 1] == 0 && body[aktualX, aktualY + 1].Value == int.MaxValue)
-                {
-
-                    body[aktualX, aktualY + 1].Value = franta.Peek().Value + 1;
-                    franta.Enqueue(body[aktualX, aktualY + 1]);
-                }
-                //pravo
-                if (aktualX + 1 < body.GetLength(0) && prostredi[aktualX + 1, aktualY] == 0 && body[aktualX + 1, aktualY].Value == int.MaxValue)
-                {
-
-                    body[aktualX + 1, aktualY].Value = franta.Peek().Value + 1;
-                    franta.Enqueue(body[aktualX + 1, aktualY]);
-                }
-                franta.Dequeue();//odoberie prvy bod zo zaciatku fronty
-                aktualX = franta.Peek().X; aktualY = franta.Peek().Y;
-                for (var i = 0; i < prostredi.GetLength(0); i++)
-                {
-                    for (int ji = 0; ji < prostredi.GetLength(1); ji++)
-                    {
-                        if (body[ji, i].Value < 50)
-                            Console.Write($"{body[ji, i].Value,3}");
-                        else
-                            Console.Write($"{"███",3}");
-                    }
-                    Console.WriteLine();
-                }
-             
-
-            }
-            Stack<Bod> stack = new Stack<Bod>(franta);
-                do
-                {
-                    //hore
-                    if (body[aktualX, aktualY - 1].Value < body[aktualX, aktualY].Value)
-                    {
-                        aktualY -= 1;
-                        stack.Push(body[aktualX, aktualY]);
-                    }
-                    //v pravo
-                    else if (body[aktualX + 1, aktualY].Value < body[aktualX, aktualY].Value)
-                    {
-                        aktualX += 1;
-                        stack.Push(body[aktualX, aktualY]);
-                    }
-                    //vlavo
-                    else if (body[aktualX - 1, aktualY].Value < body[aktualX, aktualY].Value)
-                    {
-                        aktualX -= 1;
-                        stack.Push(body[aktualX, aktualY]);
-                    }
-                    //dole
-                    else if (body[aktualX, aktualY + 1].Value < body[aktualX, aktualY].Value)
-                    {
-                        aktualY += 1;
-                        stack.Push(body[aktualX, aktualY]);
-                    }
-                } while (body[aktualX, aktualY].Value != 0);
-            Console.WriteLine();
-            foreach (Bod bod in stack)
-            {
-                Console.Write($"[{bod.X};{bod.Y}] " );
-            }
-            Console.WriteLine();
+            int aktualX = Start.X; int aktualY = Start.Y;
+            Field[aktualX, aktualY] = Start;
             
-            for (var i = 0; i < prostredi.GetLength(0); i++)
-            {
-                for (int ji = 0; ji < prostredi.GetLength(1); ji++)
+            Queue<Point> Road = new Queue<Point>();
+           
+            Road.Enqueue(Start);
+             while (aktualX != Finish.X || aktualY != Finish.Y)
+            {                 
+                if (aktualY - 1 >= 0 && Maze[aktualX, aktualY - 1] == 0 && Field[aktualX, aktualY - 1].Value == int.MaxValue)
                 {
-                    if (body[ji, i].Value < 50)
-                        Console.Write($"{body[ji, i].Value,3}");
+                    Field[aktualX, aktualY - 1].Value = Road.Peek().Value + 1;
+                    Road.Enqueue(Field[aktualX, aktualY - 1]);                
+                }
+                if (aktualX - 1 >= 0 && Maze[aktualX - 1, aktualY] == 0 && Field[aktualX - 1, aktualY].Value == int.MaxValue)
+                {
+                    Field[aktualX - 1, aktualY].Value = Road.Peek().Value + 1;
+                    Road.Enqueue(Field[aktualX - 1, aktualY]);
+                }
+                if (aktualY + 1 < fieldHeightLength && Maze[aktualX, aktualY + 1] == 0 && Field[aktualX, aktualY + 1].Value == int.MaxValue)
+                {
+                    Field[aktualX, aktualY + 1].Value = Road.Peek().Value + 1;
+                    Road.Enqueue(Field[aktualX, aktualY + 1]);
+                }
+                if (aktualX + 1 < fieldWidthLength && Maze[aktualX + 1, aktualY] == 0 && Field[aktualX + 1, aktualY].Value == int.MaxValue)
+                {
+                    Field[aktualX + 1, aktualY].Value = Road.Peek().Value + 1;
+                    Road.Enqueue(Field[aktualX + 1, aktualY]);
+                }
+                Road.Dequeue();
+                aktualX = Road.Peek().X; aktualY = Road.Peek().Y;
+                DisplayRoad();
+
+            }
+            Stack<Point> stack = new Stack<Point>(Road);
+            do
+            {
+                if (Field[aktualX, aktualY - 1].Value < Field[aktualX, aktualY].Value)
+                {
+                    aktualY -= 1;
+                    stack.Push(Field[aktualX, aktualY]);
+                }
+                else if (Field[aktualX + 1, aktualY].Value < Field[aktualX, aktualY].Value)
+                {
+                    aktualX += 1;
+                    stack.Push(Field[aktualX, aktualY]);
+                }
+                else if (Field[aktualX - 1, aktualY].Value < Field[aktualX, aktualY].Value)
+                {
+                    aktualX -= 1;
+                    stack.Push(Field[aktualX, aktualY]);
+                }
+                else if (Field[aktualX, aktualY + 1].Value < Field[aktualX, aktualY].Value)
+                {
+                    aktualY += 1;
+                    stack.Push(Field[aktualX, aktualY]);
+                }
+            } while (Field[aktualX, aktualY].Value != 0);
+            DisplayPointRoad(stack);
+
+            Console.ReadLine();
+        }
+
+        private static void FillField(int fieldWidthLength,int fieldHeightLength)
+        {
+          
+            for (int y = 0; y < fieldWidthLength; y++)
+                for (int x = 0; x < fieldHeightLength; x++)
+                    Field[x, y] = new Point(x, y, int.MaxValue);
+        }
+
+        private static void DisplayPointRoad(Stack<Point> stack)
+        {
+            Console.WriteLine();
+            foreach (Point bod in stack)
+            {
+                Console.Write($"[{bod.X};{bod.Y}] ");
+            }
+            Console.WriteLine();
+        }
+
+        private static void DisplayRoad()
+        {
+            for (var i = 0; i < Maze.GetLength(0); i++)
+            {
+                for (int ji = 0; ji < Maze.GetLength(1); ji++)
+                {
+                    if (Field[ji, i].Value < 50)
+                        Console.Write($"{Field[ji, i].Value,3}");
                     else
                         Console.Write($"{"███",3}");
                 }
                 Console.WriteLine();
             }
-            Console.ReadLine();
-
-
         }
-
     }
 }
